@@ -3,13 +3,17 @@
 ## 1.1 Specify following variables in `.env` file for your domain.
 
 
-## 1.2 Specify following variables in `cfgs/frpc.ini` file for your domain.
+## 1.2 Specify following variables in `cfgs/frpc.toml` file for your domain.
 Just refer to official document.
 The most required variables are:
 
-* `token` : token for authentication between frpc and frps.
-* `subdomain` : 3rd subdomain for frps routing (eg: drawio for drawio.domain.com).
-* `custom_domains` : full domain for frps routing (eg: drawio.domain.com).
+* `server_addr` : Public IP address of your server.
+* `server_port` : Port of frps listens for frpc connection.
+
+* `token` : token for authentication between frpc and frps, must be same as Frps's configuration.
+* `subdomain` : 3rd subdomain for frps routing (eg: drawio for bookstack.domain.com).
+* `custom_domains` : full domain for frps routing (eg: bookstack.domain.com).
+
 
 
 # 2. Install certificates

@@ -3,25 +3,27 @@ services:
   drawio:
     image: jgraph/drawio:${DRAWIO_IMAGE_TAG:-latest}
     container_name: drawio
-    ports:
-    - 8080:8080
-    - 8443:8443
+      #    ports:
+      #    - 8080:8080
+      #    - 8443:8443
     restart: always
 
   frpc:
-    image: rayruan/amd64_frp:${FRP_IMAGE_TAG:-latest}
-    container_name: drawio_frpc
+    image: "rayruan/amd64_frp:${FRP_IMAGE_TAG:-0.60.0}"
+    container_name: "${SERVER_NAME}"
+    depends_on:
+      - drawio
     environment:
-      PUID: 1000
-      PGID: 1000
+      - PUID=1000
+      - PGID=1000
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-      - ${INSTALL_ROOT_PATH}/${INSTALL_DIR}/${CFGS_DIR}/frpc.ini:/etc/frp/frpc.ini:ro
-      - ${INSTALL_ROOT_PATH}/${INSTALL_DIR}/frpc_entrypoint.sh:/app/frpc_entrypoint.sh:ro
-      - ${INSTALL_ROOT_PATH}/${INSTALL_DIR}/${CERTIFICATES_DIR}/client.crt:/client.crt:ro
-      - ${INSTALL_ROOT_PATH}/${INSTALL_DIR}/${CERTIFICATES_DIR}/client.key:/client.key:ro
-      - ${INSTALL_ROOT_PATH}/${INSTALL_DIR}/${CERTIFICATES_DIR}/rootCA.crt:/rootCA.crt:ro
+      - ${INSTALL_ROOT_PATH}/${SERVER_NAME}/${CFGS_DIR}/frpc.toml:/etc/frp/frpc.toml:ro
+      - ${INSTALL_ROOT_PATH}/${SERVER_NAME}/frpc_entrypoint.sh:/app/frpc_entrypoint.sh:ro
+      - ${INSTALL_ROOT_PATH}/${SERVER_NAME}/${CERTIFICATES_DIR}/client.crt:/client.crt:ro
+      - ${INSTALL_ROOT_PATH}/${SERVER_NAME}/${CERTIFICATES_DIR}/client.key:/client.key:ro
+      - ${INSTALL_ROOT_PATH}/${SERVER_NAME}/${CERTIFICATES_DIR}/rootCA.crt:/ca.crt:ro
     entrypoint: /app/frpc_entrypoint.sh
     restart: always
     
